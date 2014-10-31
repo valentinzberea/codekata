@@ -1,12 +1,12 @@
 from unittest import TestCase
-from binary_tree import BinaryTree, TreeNode
+from .binary_tree import BinaryTree, TreeNode
 
 
 class TestBinaryTree(TestCase):
 
     def test_traverse_empty_tree(self):
         tree = BinaryTree()
-        self.assertEquals(list(tree.preorder_tree()), [])
+        self.assertEqual(list(tree.preorder_tree()), [])
 
     def test_traverse_tree(self):
         tree = BinaryTree()
@@ -28,5 +28,5 @@ class TestBinaryTree(TestCase):
         n2.right = n6
 
         tree.root = root
-        self.assertEquals(list(tree.preorder_tree()),
+        self.assertEqual(list(tree.preorder_tree()),
                           [0, 1, 3, 4, 2, 5, 6])
