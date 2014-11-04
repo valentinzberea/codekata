@@ -1,46 +1,49 @@
 class Regex(object):
 
-    QUANTIFIER = 0
-    CHARACTER = 1
+    def match(self, regex, text):
 
-    def __init__(self, pattern):
-        self.pattern = pattern
+        assert type(regex) is str
+        assert type(text) is str
 
-    def match(self, text):
         result = []
-        for i in range(0, len(text)):
 
-            text_index = i
-            for j in range(0, len(self.pattern)):
-                pattern_char = self.pattern[j]
+        if len(text) == 0 or len(regex) == 0:
+            return result
 
-                if pattern_char[j] == '*':
-                    is_match = self.match_char(text[text_index], pattern_char)
-                    while 
-                text_index += 1
-
-                if i+j >= len(text):
-                    break
-
-                is_match = self.match_char(text[i+j], pattern_char)
-                if is_match is False:
-                    break
-                if j == len(self.pattern) - 1:
-                    result.append(text[i:i+j+1])
-
+        i = 0
+        while i < len(text):
+            idx = self.match_here(regex, text[i:])
+            if idx > -1:
+                result.append(text[i:i+idx])
+                i += idx
+            else:
+                i += 1
 
         return result
 
-    def match_char(self, text_char, pattern_char):
-        if pattern_char == '.':
-            return True
-        elif pattern_char == text_char:
-            return True
-        else:
-            return False
+    def match_here(self, regex, text):
+        if len(regex) == 0:
+            return 0
 
-    def pattern_char_type():
-        if pattern_char in ['*', '?']:
-            return QUANTIFIER
-        else:
-            return CHARACTER
+        if len(regex) > 1 and regex[1] == '*':
+            return self.match_star(regex[0], regex[2:], text)
+
+        if text[0] == regex[0] or regex[0] == '.':
+            return 1 + self.match_here(regex[1:], text[1:])
+
+        return -1
+
+    def match_star(self, char, regex, text):
+        if len(text) == 0:
+            return self.match_here(regex, text)
+
+        for i in range(0, len(text)):
+            idx = self.match_here(regex, text[i:])
+            if idx == 0:
+                return len(text)
+            elif idx > 0:
+                return i+idx
+            if text[i] != char and char != '.':
+                return i
+
+        return -1
